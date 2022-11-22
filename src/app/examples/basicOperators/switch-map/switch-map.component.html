@@ -1,0 +1,22 @@
+<h1>You have a value and you want to get a new one</h1>
+
+<pre>
+<code lang="typescript" highlight="
+  inputControl = new FormControl('');
+
+  source$: Observable<string>;
+
+  constructor() {
+    this.source$ = this.inputControl.valueChanges.pipe(
+      switchMap((input) =>
+        emojiService.getEmojisWithDelay(input?.length || 0, 600)
+      )
+    );
+  }
+"
+    ></code>
+</pre>
+
+<input [formControl]="inputControl" type="" name="" value="" />
+
+<app-marble title="source$" [source]="source$"></app-marble>

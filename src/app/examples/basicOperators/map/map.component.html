@@ -1,0 +1,20 @@
+<h1>You have a value in your stream and you want to change it</h1>
+
+<pre>
+<code lang="typescript" highlight="
+  inputControl = new FormControl('');
+
+  source$: Observable<string>;
+
+  constructor() {
+    this.source$ = this.inputControl.valueChanges.pipe(
+      map((input) => input + ' 🥒 '),
+    );
+  }
+            "
+    ></code>
+</pre>
+
+<input [formControl]="inputControl" type="" name="" value="" />
+
+<app-marble title="source$" [source]="source$"></app-marble>

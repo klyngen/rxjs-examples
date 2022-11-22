@@ -1,0 +1,51 @@
+<h1>Share replay is powerfull. And with great power comes great memory leaks</h1>
+<img src="https://ordina-jworks.github.io/img/2019-04-15-Keep-your-RxJS-streams-from-bursting-their-banks/2y7g2l.jpg" alt="" />
+<pre>
+<code lang="typescript" highlight="
+  emojiTrigger = new Subject();
+  emoji$: Observable<string>;
+
+  constructor(emojiService: EmojiServiceService) {
+    this.emoji$ = this.emojiTrigger.pipe(
+      startWith(0),
+      switchMap(() => emojiService.getEmojis(1)),
+      tap((a) => console.log(a)),
+      shareReplay()
+    );
+  }
+">
+
+</code>
+
+</pre><br>
+<button mat-flat-button color="primary" (click)="emojiTrigger.next(0)">next()</button>
+<button mat-flat-button color="primary" (click)="showMarbles = false">Unsubscribe</button>
+<button mat-flat-button color="primary" (click)="showSolution = true">The solution</button>
+<div class="marbles">
+    <app-marble title="emoji$" [source]="emoji$" *ngIf="showMarbles"></app-marble>
+</div>
+
+
+<div class="solution" *ngIf="showSolution">
+
+  <pre>
+    <code lang="typescript" highlight="
+      emojiTrigger = new Subject();
+      emoji$: Observable<string>;
+
+      constructor(emojiService: EmojiServiceService) {
+        this.emoji$ = this.emojiTrigger.pipe(
+          startWith(0),
+          switchMap(() => emojiService.getEmojis(1)),
+          tap((a) => console.log(a)),
+          shareReplay({refCount: true})
+        );
+      }
+    ">
+
+    </code>
+
+  </pre><br>
+  <button mat-flat-button color="primary" (click)="showMarblesExample2 = false">Unsubscribe</button>
+  <app-marble title="emoji$" [source]="emojirefcount$" *ngIf="showMarblesExample2"></app-marble>
+</div>

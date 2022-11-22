@@ -1,0 +1,8 @@
+<h1>{{title}}</h1>>
+<div class="marbles" *ngIf="revealed">
+    <div class="vertical-rule"></div>
+    <div class="marble" *ngFor="let marble of marbles | async">
+        <div [class]="'sphere ' + marble.type"></div>
+        <h1 class="message">{{ marble.message }}</h1>
+    </div>
+</div>

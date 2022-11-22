@@ -1,0 +1,33 @@
+<h1>Some antipatterns to round it all up</h1>
+
+<h2>Subscribe</h2>
+<img src="https://miro.medium.com/max/620/0*nigHuCYvLjp9d92D.jpg" alt="" />
+
+<p>Be kind and don't subscribe. Think again pls </p>
+
+<pre>
+<code lang="typescript" highlight="
+    let result = '';
+    someSource$.subscribe(a => {
+      someOtherSource(a).subscribe(res => {
+        result = res;
+      })
+    })
+            "></code>
+</pre>
+
+<h2>You should not tap that</h2>
+<img src="https://ordina-jworks.github.io/img/2019-04-15-Keep-your-RxJS-streams-from-bursting-their-banks/2y84y7.jpg" alt="" />
+
+<pre>
+<code lang="typescript" highlight="
+    const behaviourSubject = new BehaviourSubject();
+
+    someValue$ = someHttpCall().pipe(tap(a => behaviourSubject.next(a)));
+
+            ">
+
+</code>
+</pre>
+
+<p>Any time you think this is a solution, there is usually some better solution that is more readable</p>

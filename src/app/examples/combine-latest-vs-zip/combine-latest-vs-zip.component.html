@@ -1,0 +1,37 @@
+<h1>combineLatest vs zip</h1>
+<pre>
+<code lang="typescript" highlight="
+  triggerA = new Subject();
+  triggerB = new Subject();
+
+  sourceA$: Observable<string>;
+  sourceB$: Observable<string>;
+
+  combineLatest$: Observable<string>;
+  zip$: Observable<string>;
+
+  constructor(emojiService: EmojiServiceService) {
+    this.sourceA$ = this.triggerA.pipe(
+      switchMap(() => emojiService.getEmojis(1))
+    );
+    this.sourceB$ = this.triggerB.pipe(
+      switchMap(() => emojiService.getEmojis(1))
+    );
+
+    this.combineLatest$ = combineLatest([this.sourceA$, this.sourceB$]).pipe(
+      map((values) => values.join(' - '))
+    );
+    this.zip$ = zip([this.sourceA$, this.sourceB$]).pipe(
+      map((values) => values.join(' - '))
+    );
+  }
+"></code>
+</pre>
+
+<button mat-flat-button color="primary" (click)="triggerA.next(0)">Trigger A</button>
+<button mat-flat-button color="primary" (click)="triggerB.next(0)">Trigger B</button>
+
+<div class="marbles">
+    <app-marble title="combineLatest$" [source]="combineLatest$"></app-marble>
+    <app-marble title="zip$" [source]="zip$"></app-marble>
+</div>

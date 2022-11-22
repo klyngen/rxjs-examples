@@ -1,0 +1,42 @@
+<h1>ForkJoin vs CombineLatest</h1>
+
+<pre>
+<code lang="typescript" highlight="
+  sourceA$: Observable<string>;
+  sourceB$: Observable<string>;
+
+  combineLatest$: Observable<string>;
+  forkJoin$: Observable<string>;
+
+  constructor(readonly emojiService: EmojiServiceService) {
+    // This observable does not complete
+    this.sourceA$ = this.trigger.pipe(
+      switchMap(() => this.emojiService.getEmojis(3))
+    );
+
+    // This observable completes
+    this.sourceB$ = this.emojiService.getEmojis(2);
+
+    this.combineLatest$ = combineLatest([this.sourceA$, this.sourceB$]).pipe(
+      map((values) => values.join(' - '))
+    );
+    this.forkJoin$ = forkJoin([this.sourceA$, this.sourceB$]).pipe(
+      map((values) => values.join(' - '))
+    );
+
+    this.forkJoin2$ = forkJoin([this.sourceB$, this.sourceB$]).pipe(
+      map((values) => values.join(' - '))
+    );
+  }
+"></code>
+
+<button mat-flat-button color="primary" (click)="trigger.next(0)">Trigger the trigger</button>
+
+<div class="marbles">
+    <app-marble title="combineLatest" [source]="combineLatest$"></app-marble>
+    <app-marble title="forkJoin" [source]="forkJoin$"></app-marble>
+    <app-marble title="forkJoin2" [source]="forkJoin2$"></app-marble>
+</div>
+
+</pre>
+

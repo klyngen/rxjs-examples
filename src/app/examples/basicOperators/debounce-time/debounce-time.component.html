@@ -1,0 +1,22 @@
+<h1>You want to hold back a little bit and not kill the API</h1>
+
+<pre>
+<code lang="typescript" highlight="
+  inputControl = new FormControl('');
+
+  source$: Observable<string>;
+
+  constructor() {
+    this.source$ = this.inputControl.valueChanges.pipe(
+      map((input) => input + ' 🥒')
+      debounceTime(400)
+    );
+  }
+"
+    ></code>
+</pre>
+
+<input [formControl]="inputControl" type="" name="" value="" />
+
+<app-marble title="source$" [source]="source$"></app-marble>
+

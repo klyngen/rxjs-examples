@@ -1,0 +1,84 @@
+<div class="intro">
+    <section>
+        <h1>Be kind and don't subscribe</h1>
+
+        <h2>Don't do this</h2>
+        <pre>
+            <code lang="typescript" highlight="
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-test-component-bad',
+  template: `
+  <ul>
+    <li *ngFor='let idea of data '>\{\{ idea.name \}\}</li>
+  </ul>
+  `,
+  styles: [
+  ]
+})
+export class TestComponentGoodComponent  {
+
+  data: Idea[];
+
+  constructor(private ideaService: IdeaService) {
+    this.data$ = ideaService.getGoodIdeasFromAlv().subscribe(data => this.data = data);
+  }
+}
+"></code>
+        </pre>
+
+        <h2>Do this instead</h2>
+ <pre>
+    <code lang="typescript" highlight="
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-test-component-good',
+  template: `
+  <ul>
+    <li *ngFor='let idea of data$ | async'>\{\{ idea.name \}\}</li>
+  </ul>
+  `,
+  styles: [
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestComponentGoodComponent  {
+
+  data$: Observable<Idea[]>;
+
+  constructor(private ideaService: IdeaService) {
+    this.data$ = ideaService.getGoodIdeasFromAlv();
+  }
+}
+"></code>
+        </pre>
+    </section>
+</div>
+
+<section>
+    <h1>Quick recap on how observables behave</h1>
+
+    <pre>
+      <code lang="typescript" highlight="
+  trigger = new Subject();
+  example$: Observable<string>;
+
+  constructor() {
+    this.example$ = this.trigger.pipe(
+      map(() => '🥒'),
+      tap((a) => console.log(a))
+    );
+  }
+">
+
+      </code>
+    </pre>
+
+    <button color="primary" mat-flat-button (click)="trigger.next(0)">Trigger the trigger</button>
+    <button color="primary" mat-flat-button (click)="showMarble = true">Subscribe to the observable</button>
+
+    <app-marble *ngIf="showMarble" [source]="example$"></app-marble>
+    
+</section>

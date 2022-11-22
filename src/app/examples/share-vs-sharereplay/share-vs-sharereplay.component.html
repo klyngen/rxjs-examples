@@ -1,0 +1,48 @@
+<h1>share() vs shareReplay()</h1>
+<img src="https://ordina-jworks.github.io/img/2019-04-15-Keep-your-RxJS-streams-from-bursting-their-banks/2y7xld.jpg" alt="" />
+<pre>
+    <code lang="typescript" highlight="
+  emojiPure$: Observable<string>;
+  emojiWithShare$: Observable<string>;
+  emojiWithShareReplay$: Observable<string>;
+
+  constructor(private readonly emojiService: EmojiServiceService) {
+    this.emojiPure$ = emojiService.getEmojis(4);
+    this.emojiWithShare$ = this.emojiPure$.pipe(share());
+    this.emojiWithShareReplay$ = this.emojiPure$.pipe(shareReplay());
+  }">
+    </code>
+</pre>
+
+<button mat-flat-button color="primary" (click)="revealed = true">Emit some emojis!</button>
+
+<div class="marbles">
+    <app-marble [revealed]="revealed" title="emojiPure" [source]="emojiPure$"></app-marble>
+    <app-marble [revealed]="revealed" title="emojiWithShare" [source]="emojiWithShare$"></app-marble>
+    <app-marble [revealed]="revealed" title="emojiWithShare 2" [source]="emojiWithShare$"></app-marble>
+    <app-marble [revealed]="revealed" title="emojiWithShareReplay" [source]="emojiWithShareReplay$"></app-marble>
+    <app-marble [revealed]="revealed" title="emojiWithShareReplay" [source]="emojiWithShareReplay$"></app-marble>
+</div>
+
+<button mat-flat-button color="primary" (click)="secondRevealed = true">Click for more answers</button>
+
+<h1>We introduce a timer and look what happens</h1>
+<pre>
+    <code lang="typescript" highlight="
+  emojiPure$: Observable<string>;
+  emojiWithShare$: Observable<string>;
+  emojiWithShareReplay$: Observable<string>;
+
+  constructor(private readonly emojiService: EmojiServiceService) {
+    this.emojiPure$ = emojiService.getEmojis(4).pipe(delay(1000));
+    this.emojiWithShare$ = this.emojiPure$.pipe(share());
+    this.emojiWithShareReplay$ = this.emojiPure$.pipe(shareReplay());
+  }">
+    </code>
+</pre>
+
+<div class="marbles" *ngIf="secondRevealed">
+    <app-marble [revealed]="revealed" title="emojiPure" [source]="emojiPureDelay$"></app-marble>
+    <app-marble [revealed]="revealed" title="emojiWithShare" [source]="emojiWithShareDelay$"></app-marble>
+    <app-marble [revealed]="revealed" title="emojiWithShare 2" [source]="emojiWithShareDelay$"></app-marble>
+</div>
